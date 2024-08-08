@@ -1,0 +1,7 @@
+#PBS -l nodes=1:howat:skylake,walltime=28:00:00,mem=160gb
+#PBS -o out2
+#PBS -j oe
+cd $PBS_O_WORKDIR
+module load matlab/r2018a
+module load pgc
+exec matlab < CoastTileMonoMain.m

@@ -1,0 +1,82 @@
+bug 1
+location: /u/cdai/work/runalltiles/arcticdem_34_alaska_north/coastline.e14929119
+error: /bin/bash: line 1: 58490 Segmentation fault      (core dumped) mv /u/cdai/work/runalltiles/arcticdem_34_alaska_north/$subdir1 /var/tmp/
+reason : unknown
+
+bug 2
+location:
+error: Direct write is requested for job: 15907687.pbspl1.nas.nasa.gov, but the destination is not usecp-able from ldan12.nas.nasa.gov
+solution: delete "#PBS -koed" in job.pbs qsubj1.pbs
+reason: 
+#PBS -koed   : This will write the logs to your directory while the job is running, rather than copying them over to your directory when the job finishes.
+This feature is not working on the LDAN nodes. 
+
+bug 3
+/u/cdai/work/runalltiles/arcticdem_01_iceland/qsubj1.pbs.e15943484
+Error: Caught "std::exception" Exception message is:
+Error loading /pleiades/nasa/matlab/2021a/bin/glnxa64/builtins/imagesci/mwlibmwrtifc_builtinimpl.so. /pleiades/nasa/matlab/2021a/bin/glnxa64/builtins/imagesci/../../../../bin/glnxa64/libmwtiffmexutils.so: undefined symbol: MWTIFFRegisterFunctionPointers: Success: Success
+solution: use matlab2017b
+
+bug 4
+location: 
+cdai@pfe25:/home4/cdai/workpfe/runalltiles/arcticdem_31_alaska_south/37_02_1_1/out1
+Error: "ogr2ogr: /home4/cdai/workpfe/software/matlab2017bbin/R2017b/sys/os/glnxa64/libstdc++.so.6: version `GLIBCXX_3.4.21' not found (required by ogr2ogr)"
+Reason from Warren: "Both the system's and Matlab’s 2017b’s installation of libstdc++.so.6 are too old and do not have the required versions of GLIBCXX and CXXABI. You can check with:
+$ strings /nasa/matlab/2017b/sys/os/glnxa64/libstdc++.so.6 | grep -e "GLIBCXX_3.4.26\|CXXABI_1.3.9"
+I have built gcc 13.10 on swbuild which contains a newer version of libstdc++.so.6 with the required symbols:
+$ strings /swbuild/whzhu/gcc/gcc-13.1.0/lib64/libstdc++.so.6 | grep -e "GLIBCXX_3.4.26\|CXXABI_1.3.9"
+GLIBCXX_3.4.26
+CXXABI_1.3.9
+CXXABI_1.3.9
+GLIBCXX_3.4.26
+And you can then force matlab to use the libstdc++ in my directory instead of the matlab install or default system with:
+export LD_PRELOAD=/nobackupp16/swbuild3/whzhu/gcc/gcc-13.1.0/lib64/libstdc++.so.6
+I’ve already added the line to qsubj1_v3.pbs. However, after that it gives a new error:
+Work on subdirectory: /home4/cdai/workpfe/runalltiles/arcticdem_31_alaska_south/37_01_1_1/
+Error: Could not find version 9.13 of the MATLAB Runtime.
+Attempting to load libmwmclmcrrt.so.9.13.
+"
+solution: 
+Step 1: add one line to run_Tilemain.sh: export LD_PRELOAD=/nobackupp16/swbuild3/whzhu/gcc/gcc-13.1.0/lib64/libstdc++.so.6
+	cause another error (cdai@lfe8:~/work/runalltiles/arcticdem_31_alaska_south/qsubj1.pbs.e16243192): 
+Can't reload '/nobackupp27/cdai/software/matlab2017bbin/R2017b/bin/glnxa64/libmwcoder_types.so'
+
+Step 2: remove file /nobackupp27/cdai/software/matlab2017bbin/R2017b/bin/glnxa64/libmwcoder_types.so
+New problem (Sep 2023): /home4/cdai/workpfe/runalltiles/arcticdem_12_canada_south_nwt/29_15_2_1_bp1/out1:
+	/bin/bash: -c: line 0: `time ogr2ogr -overwrite -clipsrc output/29_15_2_1_tile.shp output/29_15_2_1_tilegshhs.shp ERROR: ld.so: object '/swbuild/whzhu/gcc/gcc-13.1.0/lib64/libstdc++.so.6' from LD_PRELOAD cannot be preloaded (cannot open shared object file): ignored.'
+
+
+Bug 5:
+location: cdai@pfe24:~/workpfe/runalltiles/arcticdem_31_alaska_south/bad37_01_2_2> less out1
+error: " Step 0: geting the boundary for all files in the region.demdir=/nobackupp27/cdai/orthorectwork/arcticdem_31_alaska_south
+rm: cannot remove 'output/55_15_1_2_tilegshhs.shp': No such file or directory
+FAILURE:
+Unable to open datasource `find:' with the following drivers.
+"
+Reason: During compiling (compile.sh), it reads the main file in ~/codec2/CoastTileMonoMain.m , and the file "tilelist" 
+Solution: mv tilelist* ~/codec2_bp1/ ;  mv CoastTileMonoMain.m ~/codec2_bp1/CoastTileMonoMain_bp1.m
+
+
+Bug 6:
+location: ~/
+error: "cdai@lfe8:~> /home4/cdai/workpfe/software/matlab2017bbin/R2017b/bin/matlab
+MATLAB is selecting SOFTWARE OPENGL rendering.
+License checkout failed.
+License Manager Error -9
+The hostid of your computer ("2000065ffe80 20000755fe80 20000678fec0 200004c0fec0 b883034af0f3
+b883034af0f2 48df3756f578 b883034af0f1 b883034af0f0 48df3756f570 b883034af0f0") does not match the
+hostid of the license file (2000036bfec0). 
+To run MATLAB on this computer, you must run the Activation client to reactivate your license.
+
+Troubleshoot this issue by visiting: 
+http://www.mathworks.com/support/lme/R2017b/9
+
+Diagnostic Information:
+Feature: MATLAB 
+License path: /u/cdai/.matlab/R2017b_licenses/license_lfe8_304226_R2017b.lic:/nobackupp27/cdai/software/matlab2017
+bbin/R2017b/licenses/license.dat:/nobackupp27/cdai/software/matlab2017bbin/R2017b/licenses/*.lic 
+Licensing error: -9,57."
+Solution: mv .matlab matlabold1
+/home4/cdai/workpfe/software/matlab2017bbin/R2017b/bin/matlab
+re-activate license
+

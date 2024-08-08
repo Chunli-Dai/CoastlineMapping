@@ -1,0 +1,27 @@
+
+11/16/2022:
+CoastTileMono_v2nogroup.m: unfinished code for algorithm without groups (isel), stacking all images at once. Purpose to save computation time.
+	Concerns: 
+	1\ for cloud detection, the orignal code can remove clouds based on smaller areas, whileas the new code can only remove clouds based on the entire image strip.
+	2\ for tidal height retrieval at a point on coastlines, needs a new way to get IDs of relevant images. 
+	Need to get ids at each point, might be time consuming. -> contradicts with our purpose of this version.
+
+
+use matlab/2017b
+type ver, check if it has:
+Mapping Toolbox 
+
+
+For tides, see folder: /home/dai.56/arcticdemapp/coastline/worktides
+
+[dai.56@unity-login1 codec2]$ cp ../worktides/CoastTileMono.m .
+
+../worktides/:
+CoastTileMonobp1group.m
+CoastTileMonobp2findimage.m
+
+cp ../../river/rivergithub2/rivermainserial/pxpymono.m .
+cp ../../river/rivergithub2/rivercore/coregimage/prepareMJ.m .
+cp ../../river/rivergithub2/rivercore/testgif.m .
+
+cp /home/dai.56/arcticdemapp/landslide/code1/adjustOffsets.m .

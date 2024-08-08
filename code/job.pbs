@@ -1,0 +1,10 @@
+#!/bin/sh
+#PBS -A loni_arcticdem2
+#PBS -l nodes=1,walltime=28:00:00,mem=160gb
+#PBS -o out2
+#PBS -j oe
+
+#cd $PBS_O_WORKDIR
+pwd
+module load matlab
+exec matlab < CoastTileMonoMain.m

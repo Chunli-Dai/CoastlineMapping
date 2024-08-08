@@ -1,0 +1,25 @@
+# Error:Cannot find CTF archive : /nobackupp27/cdai/greenland/pfework/Tilemain.ctf
+Reason: #/swbuild/cdai/software/matlab2017bbin/R2017b/bin/mcc -m Tilemain.m -a ~/workpfe/greenland/code1/ -a constant.m -C
+Solution: use absolute folder and add -C
+location: /home4/cdai/workpfe/greenland/pfework
+/swbuild/cdai/software/matlab2017bbin/R2017b/bin/mcc -m Tilemain.m -a /nobackupp27/cdai/greenland/code1/ -a constant.m -C
+
+
+bug 1
+location: /u/cdai/work/runalltiles/arcticdem_34_alaska_north/coastline.e14929119
+error: /bin/bash: line 1: 58490 Segmentation fault      (core dumped) mv /u/cdai/work/runalltiles/arcticdem_34_alaska_north/$subdir1 /var/tmp/
+reason : unknown
+
+Bug2:
+/nasa/matlab/2021a/bin/matlab
+cdai@pfe27:~/selecttiles> mcc -m TilesOncoastline_earthdem.m -a ~/codec2/ -a constant.m
+Error while determining required deployable files. Compilation terminated. Details:
+Error using matlab.depfun.internal.MatlabInspector>resolveSymbolName (line 360)
+File, function or class "/home4/cdai/codec2/.CoastTileMono.m.swp" may not exist. Neither WHICH nor EXIST could find an exact, case-sensitive match. Please check the spelling of the name, and that any required directories are on the MATLAB path.
+
+Bug3:
+
+/nobackupp27/cdai/runalltiles/earthdem_01_southwest_canada/utm10n_55_02_2_1/imagesubdir//WV02_20130715201642_1030010023B42800_13JUL15201642-M1BS-500060711160_06_P006_u16ns32609.xml does not exist. 
+reason: need xml file to get ABSCALFACTOR EFFECTIVEBANDWIDTH for each band, and MEANSUNEL in multispecmono.m
+location:~/workpfe/runalltiles/earthdem_01_southwest_canada/utm10n_55_02_2_1/
+Solution: copy xml to imagesubdir in creatsublist.m
