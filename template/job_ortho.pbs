@@ -1,0 +1,24 @@
+#!/bin/sh
+#PBS -A s5692
+#PBS -W group_list=s5692 
+#PBS -l select=1:ncpus=64:model=rom_ait:mem=80gb
+#PBS -l walltime=70:00:00
+#PBS -N coastline
+#PBS -j oe
+# #output to final destination; avoid spool error. koed May not work on ldan
+#PBS -koed  
+#PBS -M chunlidai1@gmail.com
+#PBS -m abe
+#PBS -P high
+
+cd $PBS_O_WORKDIR
+
+#module load pkgsrc  #gdalinfo
+
+mkdir arcticdem_02_greenland_southeast 
+
+source /nobackupp17/elarour/coastlinedata/code/miniconda3/bin/activate /nobackupp17/elarour/coastlinedata/code/miniconda3/envs/pgc
+
+python /nobackupp17/elarour/coastlinedata/code/imagery_utils/pgc_ortho.py /nobackupp27/cdai/coastlinedata/imagery_by_region/arcticdem_02_greenland_southeast/ /nobackupp27/cdai/orthorectwork/arcticdem_02_greenland_southeast/ --dem /nobackupp17/elarour/coastlinedata/EGM2008_Arctic.tif --epsg 3413 --outtype UInt16 --stretch ns --resample near --no-pyramids --parallel-processes 64 
+
+#revise ncpus, parallel-processes, <input_imagery_dir>, <output_ortho_dir>

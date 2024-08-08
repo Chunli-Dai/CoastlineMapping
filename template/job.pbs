@@ -1,0 +1,69 @@
+#!/bin/sh
+#PBS -A s5692
+#PBS -W group_list=s5692 
+#PBS -l select=1:ncpus=1:mem=80gb
+#PBS -l walltime=70:00:00
+#PBS -N coastline
+#PBS -o out1
+#PBS -j oe
+#PBS -koed
+#PBS -M chunlidai1@gmail.com
+#PBS -m abe
+#PBS -P high
+
+#cd $PBS_O_WORKDIR
+
+module load pkgsrc  #gdalinfo
+#module load matlab/2017b
+#module load matlab/2021a
+
+#MATLAB_SETTINGS="-nodisplay -nodesktop -nosplash"
+
+START=$(date +%s)
+
+echo work directory `pwd`
+
+coderundir=`pwd`; #'../'; # Code with updated parameters for a specific job.
+#arcticdem_08_canada_baffin/21_30_2_2/
+str1=$(basename $coderundir) #21_30_2_2
+workdir1=$str1
+coderundir=$(dirname $coderundir)
+
+echo main directory [Code with updated parameters for a specific job] for this region: $coderundir
+
+#strtile=${str1:0:9}; # "$yidc"_"$xidc"_"$xidsc"_"$yidsc"
+workdirtile=`pwd` # e.g. /mnt/c/scratch/sciteam/GS_bazu/user/chunli/arcticdem_08_canada_baffin/21_30_2_2
+pwd
+
+#55_16_2_1_coast_tide_thre50_v1.0.shp
+jumpfile=output/$workdir1"_coast_tide_thre50_v1.0.shp" #e.g., 11_29_2_1_12_22_jump.tif
+if [ -f "$jumpfile" ]; then
+    echo "$jumpfile exists. Continue to the next tile. "
+else
+    echo "$jumpfile does not exist. Carry out the calculation. "
+
+# Use compiled matlab instead of checking out new license           Jasonli @ 4/13/2021
+#./run_Tilemain.sh /home4/cdai/workpfe/software/matlab2020bbin
+#./run_Tilemain.sh /nasa/matlab/2022b
+./run_Tilemain.sh /swbuild/cdai/software/matlab2017bbin/R2017b
+#./run_Tilemain.sh /usr/local/packages/license/matlab/r2020a
+#matlab $MATLAB_SETTINGS -r "run ./Tilemain.m, exit"
+
+#remove files
+rm -f mat1.mat 
+rm -rf imagesubdir/
+#rm Tilemain
+
+fi #if jumpfile exist
+
+
+
+# your logic ends here
+END=$(date +%s)
+echo End time: $END ; # test if job still stalls.
+
+#DIFF=$(( $END - $START ))  #seconds
+#DIFFhr=`awk "BEGIN {printf \"%.2f\n\", $DIFF/3600}"`
+#echo job.pbs total run time for 1 tile within $str1 is $DIFFhr hours.
+
+

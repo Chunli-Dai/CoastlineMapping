@@ -1,0 +1,54 @@
+#!/bin/sh
+#PBS -A s5692
+#PBS -W group_list=s5692 
+#PBS -l select=1:ncpus=1:model=sky_ele:mem=20gb
+#PBS -l walltime=97:00:00
+#PBS -o out1
+#PBS -j oe
+#PBS -M chunlidai1@gmail.com
+#PBS -m abe
+#PBS -P high
+
+cd $PBS_O_WORKDIR
+echo "PBS_O_WORKDIR=$PBS_O_WORKDIR"
+#cd /nobackupp27/cdai/runalltiles/arcticdem_31_alaska_south 
+
+module load pkgsrc  #gdalinfo
+#module load matlab/2021a #crashes
+#module load matlab/2017b
+#module load matlab/2021a
+#module use /nasa/modulefiles/toss3
+#module load matlab/2017b
+
+#MATLAB_SETTINGS="-nodisplay -nodesktop -nosplash"
+
+#matlab license is blocked in PBS
+if false
+then
+echo Start compiling files
+rm -f run_Tilemain_nov.sh mccExcludedFiles.log Tilemain_nov
+
+module unload matlab
+#module load matlab/2022b # projcrs, only works for matlab Since R2020b
+#which mcc
+
+#mcc -m Tilemain_nov.m -a ~/codec2/ -a constant.m -v
+#declare -r MCC=`which mcc`
+#$MCC -m Tilemain_nov.m -a ~/codec2/ -a constant.m -v
+#/nasa/matlab/2022b/bin/mcc -m Tilemain_nov.m -a ~/codec2/ -a constant.m -v
+#/home4/cdai/workpfe/software/matlab2017bbin/R2017b/bin/mcc -m Tilemain_nov.m -a ~/codec2/ -a constant.m -v
+/swbuild/cdai/software/matlab2020bbin/bin/mcc -m Tilemain_nov.m -a ~/codec2/ -a constant.m -v
+
+cp ~/template/run_Tilemain_nov.sh .
+
+echo End compiling files
+
+fi
+
+# exec matlab < Tilemain_nov.m
+#./run_Tilemain_nov.sh /nasa/matlab/2022b
+
+# R2017b produce wrong results from projfwd in rare cases when image zone is too off.
+./run_Tilemain_nov.sh /swbuild/cdai/software/matlab2020bbin
+#./run_Tilemain_nov.sh /home4/cdai/workpfe/software/matlab2017bbin/R2017b
+
